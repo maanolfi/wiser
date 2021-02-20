@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import * as Styles from '../styles/pages/HomeLogin';
 import { useDispatch, useSelector } from 'react-redux'
-import { loginSchema } from './_validationForm'
+import * as yup from 'yup'
 import { useAlert } from "react-alert";
 import * as AuthActions from '../store/modules/auth/actions'
 
@@ -28,6 +28,10 @@ const Home: React.FC = () => {
     if (token) alert.success("Login efetuado com sucesso!")
     if (error) alert.error(error);
   }, [token, error])
+
+  const loginSchema = yup.object().shape({
+    email: yup.string().email().required(),
+  })
 
   const validateForm = async (event) => {
     if (fieldEmail.length <= 0) {
