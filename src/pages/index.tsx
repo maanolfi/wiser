@@ -5,13 +5,24 @@ import { loginSchema } from './_validationForm'
 import { useAlert } from "react-alert";
 import * as AuthActions from '../store/modules/auth/actions'
 
-export default function Home() {
+interface RootState {
+  auth: {
+    data: {
+      token: string
+      msg: {
+        error: string
+      }
+    }
+  },
+}
+
+const Home: React.FC = () => {
   const [fieldEmail, setFieldEmail] = React.useState('')
   const [fieldPass, setFieldPass] = React.useState('')
   const [formErrors, setFormErrors] = React.useState(false)
   const dispatch = useDispatch()
   const alert = useAlert()
-  const { token, msg: { error } } = useSelector(state => state.auth)
+  const { token, msg: { error } } = useSelector((state: RootState) => state.auth.data)
 
   useEffect(() => {
     if (token) alert.success("Login efetuado com sucesso!")
@@ -19,7 +30,7 @@ export default function Home() {
   }, [token, error])
 
   const validateForm = async (event) => {
-    if (fieldEmail <= 0) {
+    if (fieldEmail.length <= 0) {
       setFormErrors(false)
       return
     }
@@ -59,11 +70,11 @@ export default function Home() {
           <h1>Olá, seja bem-vindo!</h1>
           <h6>Para acessar a plataforma, faça seu login.</h6>
 
-          <Styles.FormLogin error={formErrors} onSubmit={handleSubmit}>
+          <Styles.FormLogin onSubmit={handleSubmit}>
             <label>E-mail</label>
             <div style={{ display: 'flex', position: 'relative' }}>
-              <Styles.InputError
-                error={formErrors}
+              <Styles.Input
+                className={formErrors ? 'error' : ''}
                 name='email'
                 type="text"
                 onBlur={(evt) => validateForm(evt)}
@@ -98,3 +109,5 @@ export default function Home() {
     </Styles.Root>
   );
 }
+
+export default Home

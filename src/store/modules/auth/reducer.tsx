@@ -1,36 +1,45 @@
-import { actionTypes } from './actions'
+import { RepositoriesTypes, RepositoriesState } from './types'
+import { Reducer } from 'redux'
 import { HYDRATE } from 'next-redux-wrapper'
-import produce from 'immer'
 
-const INITIAL_STATE = {
-    token: null,
-    email: null,
-    msg: {
-        error: null,        
-    },
-  };
+const INITIAL_STATE: RepositoriesState = {
+    data: {
+        token: null,
+        email: null,
+        msg: {
+            error: null,
+        },
+    }
+};
 
-function auth(state = INITIAL_STATE, action) {
+const reducer: Reducer<RepositoriesState> = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case HYDRATE: {
             return { ...state, ...action.payload }
         }
-        case actionTypes.SUCCESS:
-        return produce(state, draft => {
-            draft.token = action.payload.token;
-            draft.email = action.payload.email;
-            draft.msg = {
-                error: null                
-            };
-        });
-        case actionTypes.FAILURE:
-        return produce(state, draft => {
-            draft.msg.error = action.payload
-        });        
+        case RepositoriesTypes.SUCCESS:
+            return {
+                ...state, data: {
+                    token: action.payload.token,
+                    email: action.payload.email,
+                    msg: {
+                        error: null
+                    }
+                }
+            }
 
+        case RepositoriesTypes.FAILURE:
+            return {
+                ...state, data: {
+                    ...state.data,
+                    msg: {
+                        error: action.payload
+                    }
+                }
+            }
         default:
             return state
     }
 }
 
-export default auth
+export default reducer

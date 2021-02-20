@@ -146,6 +146,10 @@ export const FormLogin = styled.form`
     color: #FF377F;
     margin: 8px 0 8px 11px;    
   }
+
+  input.error {
+    border: 1px solid #FF377F;
+  }
 `;
 
 export const Input = styled.input`
@@ -156,11 +160,6 @@ export const Input = styled.input`
   border-radius: 8px;
   background-color: #faf5ff;
   padding: 17px;  
-`
-
-export const InputError = styled(Input)` 
-  border: ${props => `${props.error ? '1px solid #FF377F' : '1px solid #989fdb'}`};
-  
 `
 export const CloseIcon = styled.div`
   position: absolute; 

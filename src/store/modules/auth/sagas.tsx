@@ -1,9 +1,16 @@
-import { put, takeLatest, all } from 'redux-saga/effects';
-
+import { put } from 'redux-saga/effects';
 import { signInSuccess, signInFailure } from './actions';
 
-export function* signIn({ payload }) {
-  const { email, password } = payload;
+interface Action {
+  type: string,
+  payload: {
+    email: string,
+    password: string
+  }
+}
+
+export function* signIn(action: Action) {
+  const { email, password } = action.payload;
 
   try {
     const res = yield fetch(
@@ -14,7 +21,7 @@ export function* signIn({ payload }) {
     const isValid = data.some(
       (user) => user.email === email && user.password === password,
     );
-     
+
     isValid
       ? yield put(signInSuccess({ email, token: '78789456' }))
       : yield put(signInFailure('Suas credenciais não conferem.'))
@@ -28,6 +35,3 @@ export function* signIn({ payload }) {
   }
 }
 
-export default all([
-  takeLatest('@auth/AUTH_REQUEST', signIn),  
-]);
